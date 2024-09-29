@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>stopwatch simple</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #display {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            font-size: 16px;
+        }
+        #laps {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body background="https://images.unsplash.com/photo-1557683311-eac922347aa1?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max" style="background-size: cover; alt: gradient wallpaer;" >
+    <div id="display">00:00:00</div>
+    <button onclick="start()">Start</button>
+    <button onclick="stop()">Stop</button>
+    <button onclick="reset()">Reset</button>
+    <button onclick="lap()">Lap</button>
+    <div id="laps"></div>
+    <script>
+        let startTime, updatedTime, difference, tInterval;
+        let running = false;
+
+        function start() {
+            if (!running) {
+                startTime = new Date().getTime() - (difference || 0);
+                tInterval = setInterval(updateTime, 10);
+                running = true;
+            }
+        }
+
+        function stop() {
+            clearInterval(tInterval);
+            running = false;
+        }
+
+        function reset() {
+            clearInterval(tInterval);
+            running = false;
+            difference = 0;
+            document.getElementById("display").innerHTML = "00:00:00";
+            document.getElementById("laps").innerHTML = '';
+        }
+
+        function lap() {
+            const lapTime = document.getElementById("display").innerHTML;
+            const lapList = document.getElementById("laps");
+            lapList.innerHTML += `<div>${lapTime}</div>`;
+        }
+
+        function updateTime() {
+            updatedTime = new Date().getTime();
+            difference = updatedTime - startTime;
+
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            const milliseconds = Math.floor((difference % 1000) / 10);
+
+            document.getElementById("display").innerHTML =
+                (minutes < 10 ? "0" : "") + minutes + ":" +
+                (seconds < 10 ? "0" : "") + seconds + ":" +
+                (milliseconds < 10 ? "0" : "") + milliseconds;
+        }
+    </script>
+   
+    
+</body>
+</html>
